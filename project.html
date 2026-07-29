@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — FAHHM Engineering Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a1726;--panel:#0e2034;--line:#d4e6ff;--soft:#8aa0bd;--amber:#f5a623;--amber-dk:#ffb949}
+  *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:rgba(245,166,35,.3);color:#fff}
+  body{background:var(--bg);color:var(--line);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg,rgba(212,230,255,.04) 0 1px,transparent 1px 46px),
+      repeating-linear-gradient(90deg,rgba(212,230,255,.04) 0 1px,transparent 1px 46px)}
+  a{color:inherit;text-decoration:none}
+  .wrapx{max-width:1180px;margin:0 auto;padding:0 40px}
+  @media(max-width:760px){.wrapx{padding:0 22px}}
+
+  header{position:sticky;top:0;z-index:20;background:rgba(10,23,38,.85);backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(212,230,255,.1)}
+  .nav{display:flex;justify-content:space-between;align-items:center;height:70px}
+  .mark{font-family:'Anton',sans-serif;font-size:24px;letter-spacing:1px}
+  .mark b{color:var(--amber)}
+  .back{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  .back:hover{color:var(--amber-dk)}
+
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;padding:60px 0 50px}
+  @media(max-width:860px){.hero{grid-template-columns:1fr;padding:40px 0}}
+  .art{position:relative;border:1px solid rgba(212,230,255,.16);border-radius:8px;overflow:hidden;aspect-ratio:5/4;background:var(--panel)}
+  .art svg{width:100%;height:100%;display:block}
+  .art .tag{position:absolute;left:14px;bottom:12px;font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    letter-spacing:.12em;color:var(--soft)}
+  .eyebrow{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(40px,6vw,82px);line-height:.95;letter-spacing:1px;text-transform:uppercase}
+  .sub{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:14px}
+  .blurb{color:var(--soft);font-weight:300;line-height:1.75;font-size:16px;margin-top:20px;max-width:52ch}
+  .facts{display:grid;grid-template-columns:repeat(2,auto);gap:20px 44px;margin-top:28px}
+  .fact .k{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  .fact .v{font-family:'Oswald',sans-serif;font-size:17px;margin-top:3px}
+  .cta-row{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}
+  .btn{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    padding:14px 26px;border-radius:3px;transition:.25s}
+  .btn.primary{background:var(--amber);color:#0a1726} .btn.primary:hover{background:var(--amber-dk)}
+  .btn.ghost{border:1px solid rgba(212,230,255,.35);color:var(--line)} .btn.ghost:hover{border-color:var(--amber);color:var(--amber-dk)}
+
+  .gallery-sec{padding:30px 0 90px}
+  .gh{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;margin-bottom:30px}
+  .gh h2{font-family:'Anton',sans-serif;font-size:clamp(26px,4vw,46px);text-transform:uppercase;letter-spacing:1px}
+  .gh p{color:var(--soft);font-size:14px;font-weight:300}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.grid{grid-template-columns:1fr}}
+  /* PHOTO SLOTS — tomorrow: replace each .ph with <img src="assets/<project>-1.jpg" ...> */
+  .ph{aspect-ratio:4/3;border:1px dashed rgba(212,230,255,.3);border-radius:6px;background:rgba(212,230,255,.03);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--soft)}
+  .ph svg{width:30px;height:30px;opacity:.6}
+  .ph span{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+  .ph .no{font-size:11px;opacity:.6;letter-spacing:.2em}
+
+  footer{border-top:1px solid rgba(212,230,255,.1);padding:30px 0;color:var(--soft);font-size:13px}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrapx nav">
+    <a class="mark" href="index.html">FAHH<b>M</b></a>
+    <a class="back" href="index.html#work">← All projects</a>
+  </div>
+</header>
+
+<main class="wrapx">
+  <section class="hero">
+    <div class="art" id="art">
+      <span class="tag" id="tag">DRAWING · FES</span>
+    </div>
+    <div>
+      <div class="eyebrow" id="eyebrow">Project</div>
+      <h1 id="title">Project</h1>
+      <div class="sub" id="sub">—</div>
+      <p class="blurb" id="blurb"></p>
+      <div class="facts" id="facts"></div>
+      <div class="cta-row">
+        <a class="btn primary" href="index.html#quote">Start your build</a>
+        <a class="btn ghost" href="index.html#work">← Back to projects</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-sec">
+    <div class="gh">
+      <h2>Project gallery</h2>
+      <p>Photos coming soon — on-site progress and the finished build.</p>
+    </div>
+    <div class="grid" id="gallery"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrapx foot">
+    <span>© 2026 FAHHM Engineering Services (SMC) Pvt Ltd.</span>
+    <span>Design · Consultancy · Construction</span>
+  </div>
+</footer>
+
+<script>
+const LINE='#d4e6ff',AMBER='#f5a623',PANEL='#0e2034';
+function svgP(inner){return `<svg viewBox="0 0 400 480" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="${PANEL}"/>${inner}</svg>`;}
+function gAirfield(){const I=LINE,A=AMBER,cx=200,cy=268;let s='';
+  s+=`<path d="M118,472 L188,118 L212,118 L282,472 Z" fill="none" stroke="${I}" stroke-width="2.2"/>`;
+  for(let i=0;i<7;i++){const t=i/7,y=458-t*330;s+=`<line x1="200" y1="${y.toFixed(1)}" x2="200" y2="${(y-15).toFixed(1)}" stroke="${I}" stroke-width="${Math.max(1,3-t*2).toFixed(1)}" opacity=".7"/>`;}
+  for(let i=0;i<5;i++){const x=150+i*25;s+=`<line x1="${x}" y1="456" x2="${x}" y2="432" stroke="${I}" stroke-width="2" opacity=".55"/>`;}
+  s+=`<path d="M${cx},${cy-72} L${cx+7},${cy-30} L${cx+10},${cy+40} L${cx},${cy+58} L${cx-10},${cy+40} L${cx-7},${cy-30} Z" fill="${PANEL}" stroke="${I}" stroke-width="1.8"/>`;
+  s+=`<path d="M${cx+8},${cy-6} L${cx+74},${cy+40} L${cx+74},${cy+52} L${cx+9},${cy+30} Z" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<path d="M${cx-8},${cy-6} L${cx-74},${cy+40} L${cx-74},${cy+52} L${cx-9},${cy+30} Z" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<path d="M${cx+6},${cy+40} L${cx+24},${cy+64} L${cx+22},${cy+72} L${cx+5},${cy+54} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<path d="M${cx-6},${cy+40} L${cx-24},${cy+64} L${cx-22},${cy+72} L${cx-5},${cy+54} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<path d="M${cx-5},${cy-20} L${cx+5},${cy-20} L${cx+4},${cy-3} L${cx-4},${cy-3} Z" fill="none" stroke="${I}" stroke-width="1"/>`;
+  s+=`<circle cx="${cx}" cy="${cy+60}" r="4.2" fill="${A}"/>`;
+  return svgP(s);}
+function gTower(){const I=LINE,A=AMBER,x0=132,x1=268,top=70,ground=440,floors=9,fh=(440-70)/9,accF=3;let s='';
+  s+=`<line x1="40" y1="${ground}" x2="360" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<rect x="${x0}" y="${top}" width="${x1-x0}" height="${ground-top}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  s+=`<line x1="${x0-8}" y1="${top}" x2="${x1+8}" y2="${top}" stroke="${I}" stroke-width="2.4"/>`;
+  for(let f=0;f<floors;f++){const fy=top+f*fh;if(f>0)s+=`<line x1="${x0}" y1="${fy.toFixed(1)}" x2="${x1}" y2="${fy.toFixed(1)}" stroke="${I}" stroke-width="1" opacity=".55"/>`;
+    const cols=4,pad=12,gap=(x1-x0-pad*2)/cols,ww=gap*0.6,wh=fh*0.5;
+    for(let c=0;c<cols;c++){const wx=x0+pad+c*gap+(gap-ww)/2,wy=fy+fh*0.25,acc=(f===accF);
+      s+=`<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="${acc?A:'none'}" ${acc?'fill-opacity=".8"':''} stroke="${I}" stroke-width="1.1"/>`;}}
+  s+=`<line x1="200" y1="${top}" x2="200" y2="${top-38}" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<line x1="244" y1="${top}" x2="244" y2="40" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<line x1="150" y1="46" x2="300" y2="46" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<line x1="182" y1="46" x2="182" y2="80" stroke="${I}" stroke-width="1"/>`;
+  return svgP(s);}
+function gHome(){const I=LINE,A=AMBER,x0=110,x1=290,top=212,ground=430,apex=138;let s='';
+  s+=`<line x1="40" y1="${ground}" x2="360" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<path d="M${x0},${ground} L${x0},${top} L${x1},${top} L${x1},${ground}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  s+=`<path d="M${x0-12},${top+6} L200,${apex} L${x1+12},${top+6}" fill="none" stroke="${I}" stroke-width="2.6" stroke-linejoin="round"/>`;
+  s+=`<rect x="236" y="${apex+16}" width="16" height="36" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<rect x="182" y="${ground-92}" width="38" height="92" fill="none" stroke="${I}" stroke-width="2"/>`;
+  s+=`<circle cx="212" cy="${ground-46}" r="2" fill="${I}"/>`;
+  s+=`<rect x="128" y="252" width="48" height="48" fill="${A}" fill-opacity=".8" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<rect x="224" y="252" width="48" height="48" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  [[128,252],[224,252]].forEach(w=>{s+=`<line x1="${w[0]+24}" y1="${w[1]}" x2="${w[0]+24}" y2="${w[1]+48}" stroke="${I}" stroke-width="1"/><line x1="${w[0]}" y1="${w[1]+24}" x2="${w[0]+48}" y2="${w[1]+24}" stroke="${I}" stroke-width="1"/>`;});
+  s+=`<line x1="${x0}" y1="312" x2="${x1}" y2="312" stroke="${I}" stroke-width="1" opacity=".5"/>`;
+  return svgP(s);}
+function gRoad(){const I=LINE,A=AMBER;let s='';
+  s+=`<path d="M88,472 L182,120 L218,120 L312,472 Z" fill="none" stroke="${I}" stroke-width="2.2"/>`;
+  for(let i=0;i<8;i++){const t=i/8,y=460-t*330;s+=`<line x1="200" y1="${y.toFixed(1)}" x2="200" y2="${(y-17).toFixed(1)}" stroke="${I}" stroke-width="${Math.max(1,3-t*2).toFixed(1)}" opacity=".75"/>`;}
+  s+=`<rect x="40" y="178" width="320" height="34" fill="${PANEL}" stroke="${I}" stroke-width="2"/>`;
+  for(let x=70;x<360;x+=40)s+=`<line x1="${x}" y1="178" x2="${x}" y2="212" stroke="${I}" stroke-width="1" opacity=".4"/>`;
+  s+=`<line x1="108" y1="212" x2="108" y2="262" stroke="${I}" stroke-width="2"/>`;
+  s+=`<line x1="292" y1="212" x2="292" y2="272" stroke="${I}" stroke-width="2"/>`;
+  s+=`<rect x="300" y="300" width="28" height="20" fill="${A}" fill-opacity=".85" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<line x1="314" y1="320" x2="314" y2="352" stroke="${I}" stroke-width="1.4"/>`;
+  return svgP(s);}
+function gBridge(){const I=LINE,A=AMBER,deck=300;let s='';
+  s+=`<line x1="18" y1="${deck}" x2="382" y2="${deck}" stroke="${I}" stroke-width="2.6"/>`;
+  [130,270].forEach(tx=>{s+=`<line x1="${tx}" y1="${deck}" x2="${tx}" y2="120" stroke="${I}" stroke-width="2.4"/>`;
+    s+=`<line x1="${tx-8}" y1="126" x2="${tx+8}" y2="126" stroke="${I}" stroke-width="2"/>`;});
+  for(let i=1;i<=5;i++){const o=i*22;[130,270].forEach(tx=>{s+=`<line x1="${tx}" y1="122" x2="${tx-o}" y2="${deck}" stroke="${I}" stroke-width="1" opacity=".65"/><line x1="${tx}" y1="122" x2="${tx+o}" y2="${deck}" stroke="${I}" stroke-width="1" opacity=".65"/>`;});}
+  s+=`<line x1="18" y1="${deck+92}" x2="382" y2="${deck+92}" stroke="${I}" stroke-width="1" opacity=".35"/>`;
+  s+=`<line x1="130" y1="${deck}" x2="130" y2="${deck+72}" stroke="${I}" stroke-width="2"/>`;
+  s+=`<line x1="270" y1="${deck}" x2="270" y2="${deck+72}" stroke="${I}" stroke-width="2"/>`;
+  s+=`<circle cx="130" cy="118" r="3.4" fill="${A}"/>`;
+  return svgP(s);}
+function gHangar(){const I=LINE,A=AMBER,x0=66,x1=334,ground=434,top=212;let s='';
+  s+=`<line x1="30" y1="${ground}" x2="370" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<path d="M${x0},${ground} L${x0},${top} Q200,${top-112} ${x1},${top} L${x1},${ground}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  for(let i=1;i<=3;i++){const o=i*22;s+=`<path d="M${x0+o},${top+6} Q200,${top-92+o*0.6} ${x1-o},${top+6}" fill="none" stroke="${I}" stroke-width="1" opacity=".45"/>`;}
+  const d0=118,d1=282;s+=`<rect x="${d0}" y="${ground-152}" width="${d1-d0}" height="152" fill="none" stroke="${I}" stroke-width="2"/>`;
+  for(let x=d0+20;x<d1;x+=20)s+=`<line x1="${x}" y1="${ground-152}" x2="${x}" y2="${ground}" stroke="${I}" stroke-width="1" opacity=".55"/>`;
+  s+=`<path d="M188,${ground-152} L210,${ground-206} L232,${ground-152} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<circle cx="${x1-16}" cy="${top+30}" r="3.2" fill="${A}"/>`;
+  return svgP(s);}
+const GENP={airfield:gAirfield,tower:gTower,home:gHome,road:gRoad,bridge:gBridge,hangar:gHangar};
+
+const DATA={
+  airfield:{t:"Aviation Base",s:"Infrastructure · airfield",loc:"Defence",dwg:"FES-A07",
+    blurb:"Consultancy for a military aviation base — runway, taxiway and apron design with drainage, lighting and MEP coordination, engineered to load spec and delivered with full documentation.",
+    facts:{Scope:"Infrastructure design",Discipline:"Civil · MEP",Status:"Case study",Year:"—"}},
+  tower:{t:"Commercial Tower",s:"Structural & MEP design",loc:"Islamabad",dwg:"FES-T12",
+    blurb:"Structural and MEP design for a commercial high-rise — a coordinated, code-compliant package from concept through tender-ready documentation.",
+    facts:{Scope:"Structural · MEP",Discipline:"Engineering design",Status:"Case study",Year:"—"}},
+  home:{t:"Private Residence",s:"Architecture & interiors",loc:"E-11, Islamabad",dwg:"FES-H01",
+    blurb:"Architecture and interior design for a private residence — turning a brief into a buildable, beautiful home with full drawings and finishes.",
+    facts:{Scope:"Architecture · Interior",Discipline:"Design",Status:"Case study",Year:"—"}},
+  road:{t:"Highway & Overpass",s:"Infrastructure design",loc:"KP Corridor",dwg:"FES-R04",
+    blurb:"Infrastructure design for a highway corridor and overpass — geometry, pavement, drainage and structures with topographic survey and GIS mapping.",
+    facts:{Scope:"Roads · Structures",Discipline:"Civil · GIS",Status:"Case study",Year:"—"}},
+  bridge:{t:"River Crossing",s:"Structural design",loc:"Islamabad",dwg:"FES-B02",
+    blurb:"Structural design for a river crossing — pylons, deck and foundations engineered for span and load, with testing protocols throughout.",
+    facts:{Scope:"Structural design",Discipline:"Engineering",Status:"Case study",Year:"—"}},
+  hangar:{t:"Industrial Hangar",s:"Structural & MEP",loc:"Islamabad",dwg:"FES-A09",
+    blurb:"Structural and MEP design for a wide-span industrial hangar — clear-span steel, doors and services, engineered and documented for construction.",
+    facts:{Scope:"Structural · MEP",Discipline:"Engineering design",Status:"Case study",Year:"—"}},
+};
+
+const kind=(new URLSearchParams(location.search).get('p')||'airfield');
+const d=DATA[kind]||DATA.airfield;
+document.getElementById('art').insertAdjacentHTML('afterbegin',(GENP[kind]||gAirfield)());
+document.title=d.t+" — FAHHM Engineering Services";
+document.getElementById('eyebrow').textContent=d.s.split(' · ')[0];
+document.getElementById('title').textContent=d.t;
+document.getElementById('sub').textContent=d.s+" · "+d.loc;
+document.getElementById('blurb').textContent=d.blurb;
+document.getElementById('tag').textContent="DRAWING · "+d.dwg;
+document.getElementById('facts').innerHTML=Object.entries(d.facts).map(([k,v])=>`<div class="fact"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+/* photo slots — replace with <img> once photos arrive (assets/${kind}-N.jpg) */
+const cam=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-2h8l2 2h3v12H3z"/><circle cx="12" cy="13" r="4"/></svg>`;
+document.getElementById('gallery').innerHTML=Array.from({length:6},(_,i)=>
+  `<div class="ph">${cam}<span>Photo ${String(i+1).padStart(2,'0')}</span><span class="no">COMING SOON</span></div>`).join('');
+</script>
+</body>
+</html>

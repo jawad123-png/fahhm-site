@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAHHM Engineering Services — Construction Consultancy</title>
+<meta name="description" content="FAHHM Engineering Services (SMC) Pvt Ltd — architecture, engineering design, construction consultancy and construction. Empowering visions, delivering results.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a1726;          /* black */
+    --panel:#0e2034;
+    --line:#d4e6ff;        /* white line-art / text */
+    --soft:#8aa0bd;
+    --amber:#f5a623;       /* safety accent — used sparingly */
+    --amber-dk:#ffb949;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:rgba(245,166,35,.3);color:#fff}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--line);font-family:'Inter',system-ui,sans-serif;
+    overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+  @media (pointer:coarse){ body{cursor:auto} }
+
+  /* concrete grain + vignette */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.07;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:65;
+    background:radial-gradient(130% 100% at 50% 30%,transparent 42%,rgba(0,0,0,.6) 100%)}
+
+  #grid{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+  /* surveyor-crosshair cursor */
+  #cross{position:fixed;top:0;left:0;width:24px;height:24px;z-index:90;pointer-events:none;
+    transform:translate(-50%,-50%);will-change:transform}
+  #cross .ring{position:absolute;inset:0;border:1.5px solid var(--amber);border-radius:50%;opacity:.9}
+  #cross::before,#cross::after{content:"";position:absolute;background:var(--line)}
+  #cross::before{left:50%;top:-7px;width:1px;height:38px;transform:translateX(-50%)}
+  #cross::after{top:50%;left:-7px;height:1px;width:38px;transform:translateY(-50%)}
+
+  /* hero building emblem — constructs itself, then crane swings */
+  #heroBuild{position:fixed;top:47%;left:50%;height:min(90vh,880px);width:auto;aspect-ratio:560/480;
+    transform:translate(-50%,-50%);transform-origin:50% 78%;  /* dive zooms toward the doorway */
+    z-index:1;pointer-events:none;will-change:transform,opacity;opacity:.95}
+  #heroBuild svg{width:100%;height:100%;display:block;overflow:visible}
+  .jib{transform-box:view-box;transform-origin:471px 140px;will-change:transform}
+  @keyframes swing{0%,100%{transform:rotate(-3.2deg)}50%{transform:rotate(3.2deg)}}
+  .craning .jib{animation:swing 8s ease-in-out infinite}
+
+  .wrap{position:relative;z-index:2}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;
+    align-items:center;padding:22px 40px}
+  .mark{font-family:'Anton',sans-serif;font-size:24px;letter-spacing:1px;line-height:1}
+  .mark b{color:var(--amber)}
+  nav{display:flex;gap:28px;align-items:center;font-family:'Oswald',sans-serif;font-size:13px;
+    letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+  nav a{color:var(--line);text-decoration:none;opacity:.7;transition:.3s}
+  nav a:hover{opacity:1;color:var(--amber-dk)}
+  .quote{border:1px solid var(--line);padding:9px 16px;border-radius:2px}
+  .quote:hover{background:var(--line);color:var(--bg)!important;opacity:1}
+  @media (max-width:760px){ nav .lnk{display:none} header{padding:18px 22px} }
+
+  .hero{height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-align:center;position:relative;padding:0 20px}
+  .hero-inner{will-change:transform,opacity;max-width:980px;margin:0 auto;display:flex;
+    flex-direction:column;align-items:center;position:relative}
+  /* scrim: darkens the busy linework right behind the hero text for legibility */
+  .hero-inner::before{content:"";position:absolute;z-index:-1;left:50%;top:50%;
+    width:135%;height:128%;transform:translate(-50%,-50%);
+    background:radial-gradient(58% 56% at 50% 48%,rgba(10,23,38,.94) 0%,rgba(10,23,38,.8) 42%,rgba(10,23,38,0) 78%);
+    filter:blur(6px)}
+  .kicker{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;
+    color:#bccde6;margin-bottom:22px;text-shadow:0 1px 10px rgba(10,23,38,.95);animation:rise 1.1s 1.6s both}
+  .logo{font-family:'Anton',sans-serif;font-size:clamp(66px,16vw,220px);line-height:.9;letter-spacing:5px;
+    text-transform:uppercase;text-shadow:0 2px 30px rgba(10,23,38,.9)}
+  .logo .l{display:inline-block;opacity:0;transform:translateY(.16em);filter:blur(7px);
+    animation:ink-in .85s cubic-bezier(.2,.8,.2,1) forwards}
+  .logo .sp{display:inline-block;width:.28em}
+  .logo .amber{color:var(--amber)}
+  @keyframes ink-in{to{opacity:1;transform:none;filter:blur(0)}}
+  .tagline{margin-top:26px;max-width:540px;font-size:clamp(14px,1.6vw,18px);font-weight:400;line-height:1.7;
+    color:#c2d2e8;opacity:0;animation:rise 1.2s 1.95s both;text-shadow:0 1px 14px rgba(10,23,38,.95)}
+  .tagline b{color:#fff;font-weight:600}
+  .cta{margin-top:34px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--bg);
+    background:var(--amber);font-family:'Oswald',sans-serif;font-weight:600;padding:15px 30px;border-radius:2px;
+    font-size:13px;letter-spacing:.18em;text-transform:uppercase;opacity:0;animation:rise 1.2s 2.2s both;transition:.3s}
+  .cta:hover{background:var(--line);letter-spacing:.26em}
+  .scrollcue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-family:'Oswald',sans-serif;
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--soft);display:flex;
+    flex-direction:column;align-items:center;gap:10px;animation:rise 1.2s 2.5s both}
+  .scrollcue .line{width:1px;height:44px;background:linear-gradient(var(--line),transparent);
+    transform-origin:top;animation:drop 2.2s ease-in-out infinite}
+  @keyframes drop{0%,100%{transform:scaleY(.4);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  /* ===== Selected Work section ===== */
+  section{position:relative;z-index:2}
+  .pad{padding:130px 40px}
+  @media (max-width:760px){ .pad{padding:84px 22px} }
+  .sec-head{max-width:760px;margin:0 auto 58px;text-align:center}
+  .eyebrow{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .h2{font-family:'Anton',sans-serif;font-size:clamp(34px,5.6vw,74px);letter-spacing:1px;text-transform:uppercase;line-height:.98;margin-bottom:16px}
+  .lede{font-weight:300;color:var(--soft);line-height:1.7;font-size:16px}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1180px;margin:0 auto}
+  @media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:560px){ .grid{grid-template-columns:1fr} }
+  .card{position:relative;overflow:hidden;background:var(--panel);aspect-ratio:4/5;
+    border:1px solid rgba(212,230,255,.08);border-radius:3px;box-shadow:0 30px 60px -34px #000}
+  .card .art{position:absolute;inset:0;transition:transform 6s ease}
+  .card .art svg{width:100%;height:100%;display:block}
+  .card:hover .art{transform:scale(1.06)}
+  .lid{position:absolute;top:0;height:100%;width:51%;z-index:3;background:#122844;
+    transition:transform 1.05s cubic-bezier(.7,0,.15,1)}
+  .lid::after{content:"";position:absolute;inset:0;mix-blend-mode:overlay;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .lid.l{left:0;box-shadow:inset -1px 0 0 rgba(245,166,35,.3)} .lid.r{right:0}
+  .card:hover .lid.l,.card.open .lid.l{transform:translateX(-101%)}
+  .card:hover .lid.r,.card.open .lid.r{transform:translateX(101%)}
+  .seam{position:absolute;top:0;bottom:0;left:50%;width:1px;z-index:4;transform:translateX(-50%);
+    background:linear-gradient(transparent,rgba(245,166,35,.6),transparent);transition:opacity .4s}
+  .card:hover .seam,.card.open .seam{opacity:0}
+  .meta{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:18px;
+    background:linear-gradient(transparent,rgba(0,0,0,.88));transform:translateY(8px);opacity:0;transition:.5s .25s}
+  .card:hover .meta,.card.open .meta{opacity:1;transform:none}
+  .meta .t{font-family:'Oswald',sans-serif;font-weight:600;font-size:18px}
+  .meta .s{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:4px}
+  .meta .go{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-top:10px}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .95s,transform .95s}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ===== shared ===== */
+  .wrapx{max-width:1180px;margin:0 auto}
+  .lhead{max-width:780px;margin:0 0 52px}
+  .lhead .lede{margin-top:18px}
+
+  /* ===== What we build ===== */
+  .svc-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(212,230,255,.12);border-radius:6px;overflow:hidden;max-width:1180px;margin:0 auto}
+  .svc{padding:clamp(28px,3.4vw,46px);border-right:1px solid rgba(212,230,255,.12);border-bottom:1px solid rgba(212,230,255,.12);transition:background .3s}
+  .svc:nth-child(2n){border-right:none}
+  .svc:nth-child(n+3){border-bottom:none}
+  .svc:hover{background:rgba(212,230,255,.03)}
+  .svc .ic{width:52px;height:52px;border-radius:11px;background:#122844;border:1px solid rgba(212,230,255,.14);
+    display:flex;align-items:center;justify-content:center;color:var(--line);margin-bottom:22px}
+  .svc .ic svg{width:24px;height:24px}
+  .svc h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:22px;margin-bottom:10px}
+  .svc p{color:var(--soft);font-weight:300;line-height:1.65;font-size:15px}
+  .svc .lk{display:inline-flex;align-items:center;gap:7px;margin-top:20px;color:var(--amber-dk);
+    font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.06em;text-decoration:none;transition:gap .25s}
+  .svc .lk svg{width:16px;height:16px} .svc .lk:hover{gap:12px}
+  @media (max-width:700px){.svc-grid{grid-template-columns:1fr}.svc{border-right:none}.svc:nth-child(n+3){border-bottom:1px solid rgba(212,230,255,.12)}.svc:last-child{border-bottom:none}}
+
+  /* ===== Process ===== */
+  .process{background:#0c1c2e;border-top:1px solid rgba(212,230,255,.08);border-bottom:1px solid rgba(212,230,255,.08)}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;max-width:1180px;margin:42px auto 0;position:relative}
+  .steps::before{content:"";position:absolute;top:6px;left:5%;right:5%;height:1px;background:rgba(212,230,255,.18)}
+  .step{position:relative;padding-top:32px}
+  .step .dot{position:absolute;top:0;left:0;width:13px;height:13px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(245,166,35,.18)}
+  .step .no{font-family:'Oswald',sans-serif;color:var(--amber);font-weight:600;font-size:13px;letter-spacing:.1em}
+  .step h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;margin:6px 0 8px}
+  .step p{color:var(--soft);font-weight:300;font-size:14px;line-height:1.6}
+  @media (max-width:760px){.steps{grid-template-columns:1fr;gap:0}.steps::before{left:6px;top:0;bottom:0;width:1px;height:auto;right:auto}.step{padding:0 0 26px 28px}.step .dot{left:0;top:4px}}
+
+  /* ===== Crew ===== */
+  .crew-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center;max-width:1180px;margin:0 auto}
+  .crew .crew-quote{font-size:clamp(17px,2vw,21px);line-height:1.6;color:var(--line);margin:22px 0;font-weight:300}
+  .crew .sign{font-family:'Oswald',sans-serif;font-weight:600;font-size:17px}
+  .crew .sign span{display:block;font-weight:400;color:var(--soft);font-size:13px;margin-top:3px}
+  .badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+  .badges .b{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(212,230,255,.18);border-radius:30px;
+    padding:9px 15px;font-size:12px;font-family:'Oswald',sans-serif;letter-spacing:.04em;color:var(--line)}
+  .badges .b svg{width:15px;height:15px;color:var(--amber)}
+  .founder{border-radius:8px;overflow:hidden;aspect-ratio:5/4;border:1px solid rgba(212,230,255,.12)}
+  .founder img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05) brightness(.9)}
+  @media (max-width:820px){.crew-grid{grid-template-columns:1fr}.founder{order:-1}}
+
+  /* ===== Quote / contact ===== */
+  .quote-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,5vw,60px);max-width:1180px;margin:0 auto}
+  @media (max-width:820px){.quote-grid{grid-template-columns:1fr}}
+  .contact-list{margin-top:30px;display:flex;flex-direction:column;gap:16px}
+  .contact-list a,.contact-list div{display:flex;align-items:center;gap:14px;color:var(--line);text-decoration:none;font-size:15px}
+  .contact-list .ic{width:40px;height:40px;border-radius:8px;background:#122844;border:1px solid rgba(212,230,255,.12);
+    display:flex;align-items:center;justify-content:center;color:var(--amber);flex-shrink:0}
+  .contact-list .ic svg{width:18px;height:18px}
+  .contact-list a:hover{color:var(--amber-dk)}
+  .qform{background:var(--panel);border:1px solid rgba(212,230,255,.12);border-radius:10px;padding:clamp(24px,3vw,40px)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:520px){.row2{grid-template-columns:1fr}}
+  .field{margin-bottom:16px;display:flex;flex-direction:column}
+  .field label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--soft);margin-bottom:7px}
+  .field input,.field select,.field textarea{background:#0c1c2e;border:1px solid rgba(212,230,255,.16);border-radius:6px;
+    color:var(--line);font-family:inherit;font-size:15px;padding:12px 13px;outline:none;transition:border-color .25s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--amber)}
+  .field textarea{min-height:120px;resize:vertical} .field select option{background:#0c1c2e}
+  .btn-primary{width:100%;margin-top:6px;background:var(--amber);color:#0a1726;border:none;font-family:'Oswald',sans-serif;
+    font-weight:600;font-size:15px;letter-spacing:.04em;padding:15px;border-radius:6px;cursor:none;display:flex;
+    align-items:center;justify-content:center;gap:8px;transition:background .25s}
+  .btn-primary:hover{background:var(--amber-dk)} .btn-primary svg{width:18px;height:18px}
+  .form-note{color:var(--soft);font-size:12px;text-align:center;margin-top:14px}
+  .form-ok{display:none;background:rgba(245,166,35,.12);border:1px solid var(--amber);color:var(--line);padding:14px;border-radius:6px;margin-bottom:18px;font-size:14px}
+  .form-ok.show{display:block}
+
+  /* ===== FAQ ===== */
+  .faq-list details{border-top:1px solid rgba(212,230,255,.14)}
+  .faq-list details:last-child{border-bottom:1px solid rgba(212,230,255,.14)}
+  .faq-list summary{list-style:none;cursor:none;display:flex;justify-content:space-between;align-items:center;gap:20px;
+    padding:24px 4px;font-family:'Oswald',sans-serif;font-weight:500;font-size:clamp(16px,2vw,20px);color:var(--line)}
+  .faq-list summary::-webkit-details-marker{display:none}
+  .faq-list .pm{flex-shrink:0;width:30px;height:30px;border:1px solid rgba(212,230,255,.25);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--amber);transition:transform .3s}
+  .faq-list .pm svg{width:15px;height:15px}
+  .faq-list details[open] .pm{transform:rotate(45deg)}
+  .faq-list .ans{padding:0 4px 24px;color:var(--soft);font-weight:300;line-height:1.7;font-size:15px;max-width:700px}
+
+  /* ===== Footer ===== */
+  footer{position:relative;z-index:2;background:#0c1c2e;border-top:1px solid rgba(212,230,255,.1);padding:64px 40px 30px}
+  .foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1180px;margin:0 auto}
+  @media (max-width:820px){.foot-top{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.foot-top{grid-template-columns:1fr}}
+  .fbrand{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:14px}
+  .fbrand b{color:var(--amber)}
+  .foot-brand p{color:var(--soft);font-weight:300;font-size:14px;line-height:1.6;max-width:36ch}
+  .fsocial{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .fsocial a{width:40px;height:40px;border:1px solid rgba(212,230,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--line);transition:.25s}
+  .fsocial a:hover{background:var(--amber);color:#0a1726;border-color:var(--amber);transform:translateY(-2px)}
+  .fsocial a svg{width:17px;height:17px}
+  .foot-col h4{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:14px}
+  .foot-col a,.foot-col p{display:block;color:var(--line);text-decoration:none;font-size:14px;margin-bottom:9px;opacity:.85}
+  .foot-col a:hover{color:var(--amber-dk)}
+  .foot-map{max-width:1180px;margin:38px auto 0;border:1px solid rgba(212,230,255,.14);border-radius:8px;overflow:hidden}
+  .foot-map iframe{width:100%;height:230px;border:0;display:block;filter:grayscale(.25) contrast(1.03)}
+  .foot-bottom{max-width:1180px;margin:40px auto 0;padding-top:20px;border-top:1px solid rgba(212,230,255,.1);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--soft)}
+
+  /* ===== About ===== */
+  .about-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(28px,5vw,64px);align-items:center;max-width:1180px;margin:0 auto}
+  @media (max-width:820px){.about-grid{grid-template-columns:1fr}.blueprint{order:-1}}
+  .blueprint{position:relative;border:1px solid rgba(212,230,255,.16);border-radius:8px;overflow:hidden;aspect-ratio:5/4}
+  .blueprint img{width:100%;height:100%;object-fit:cover;filter:contrast(1.06) brightness(.96) saturate(1.08)}
+  .blueprint::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(10,23,38,.05),rgba(10,23,38,.55))}
+  .bp-title{position:absolute;right:16px;bottom:16px;z-index:2;width:min(320px,74%);
+    background:rgba(11,42,94,.58);backdrop-filter:blur(1px);
+    border:1.5px solid rgba(234,242,255,.7);border-top:4px solid var(--amber)}
+  .bp-title .nm{font-family:'Anton',sans-serif;font-size:clamp(18px,2.1vw,24px);letter-spacing:1px;color:#fff;
+    padding:12px 16px;border-bottom:1px solid rgba(234,242,255,.5)}
+  .bp-title .nm b{color:var(--amber)}
+  .bp-title .pr{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.12em;color:#d7e3f6;
+    padding:11px 16px;border-bottom:1px solid rgba(234,242,255,.5)}
+  .bp-title .meta{display:grid;grid-template-columns:1fr 1fr}
+  .bp-title .cell{padding:11px 16px;font-family:ui-monospace,Menlo,monospace}
+  .bp-title .cell+.cell{border-left:1px solid rgba(234,242,255,.5)}
+  .bp-title .cell span{display:block;font-size:10px;letter-spacing:.14em;color:#9fb6d6}
+  .bp-title .cell b{font-size:15px;color:#eaf2ff;font-weight:500;letter-spacing:.04em;margin-top:3px;display:block}
+  .about p{color:var(--soft);font-weight:300;line-height:1.75;font-size:16px;margin-top:16px;max-width:54ch}
+  .stats{display:grid;grid-template-columns:repeat(4,auto);gap:30px;margin-top:36px}
+  @media (max-width:520px){.stats{grid-template-columns:1fr 1fr;gap:24px}}
+  .stat .n{font-family:'Anton',sans-serif;font-size:36px;line-height:1;color:var(--line)}
+  .stat .n b{color:var(--amber)}
+  .stat .l{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-top:6px}
+
+  /* projects lists */
+  .proj-feat{max-width:1180px;margin:46px auto 0;border:1px solid rgba(245,166,35,.3);border-radius:8px;padding:16px 24px;
+    display:flex;align-items:center;gap:16px;background:linear-gradient(90deg,rgba(245,166,35,.08),transparent)}
+  .proj-feat .ft{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);white-space:nowrap}
+  .proj-feat .fn{font-family:'Anton',sans-serif;font-size:clamp(18px,2.4vw,26px);letter-spacing:.5px;text-transform:uppercase}
+  .proj-lists{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,54px);max-width:1180px;margin:44px auto 0}
+  @media(max-width:760px){.proj-lists{grid-template-columns:1fr}}
+  .pl-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .pl-head h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;letter-spacing:.16em;text-transform:uppercase}
+  .pl-dot{width:9px;height:9px;border-radius:50%;background:var(--amber)}
+  .pl-dot.up{background:none;border:1.5px solid var(--amber)}
+  .proj-col ul{list-style:none}
+  .proj-col li{display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:12px;padding:13px 2px;border-top:1px solid rgba(212,230,255,.1)}
+  .proj-col li:last-child{border-bottom:1px solid rgba(212,230,255,.1)}
+  .proj-col .pn{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--soft)}
+  .proj-col .pt{font-size:15px;color:var(--line)}
+  .proj-col .pc{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-dk);white-space:nowrap;text-align:right}
+  /* clients marquee */
+  .clients{overflow:hidden}
+  .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+  .ctrack{display:flex;gap:22px;width:max-content;animation:cscroll 36s linear infinite}
+  .marquee:hover .ctrack{animation-play-state:paused}
+  @keyframes cscroll{to{transform:translateX(-33.333%)}}
+  .client{flex:0 0 auto;width:210px;border:1px solid rgba(212,230,255,.12);border-radius:8px;padding:26px 20px;text-align:center;
+    background:linear-gradient(180deg,rgba(212,230,255,.03),transparent);transition:.3s}
+  .client:hover{border-color:rgba(245,166,35,.5);transform:translateY(-3px)}
+  .clogo{height:60px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+  .clogo img{max-height:42px;max-width:118px;object-fit:contain;filter:grayscale(1);opacity:.72;transition:.3s}
+  .client:hover .clogo img{filter:none;opacity:1}
+  .cmono{width:54px;height:54px;border:1px solid rgba(20,40,70,.28);border-radius:50%;display:none;align-items:center;
+    justify-content:center;font-family:'Anton',sans-serif;font-size:17px;color:#1c2c40;letter-spacing:.5px}
+  .cname{font-family:'Oswald',sans-serif;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#6a7686;transition:.3s}
+  .client:hover .cname{color:#1c2c40}
+
+  .motion-toggle{position:fixed;bottom:18px;right:18px;z-index:80;background:var(--line);color:var(--bg);
+    border:none;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    padding:9px 14px;border-radius:2px;cursor:none;opacity:.8;transition:.3s}
+  .motion-toggle:hover{opacity:1}
+  @media (pointer:coarse){ #cross{display:none} .motion-toggle{cursor:auto} }
+</style>
+</head>
+<body>
+
+<canvas id="grid"></canvas>
+<div id="heroBuild"></div>
+<div id="cross"><span class="ring"></span></div>
+
+<header>
+  <div class="mark">FAHH<b>M</b></div>
+  <nav>
+    <a class="lnk" href="#about">About</a>
+    <a class="lnk" href="#work">Projects</a>
+    <a class="lnk" href="clients.html">Clients</a>
+    <a class="lnk" href="services.html">Services</a>
+    <a class="lnk" href="#process">Process</a>
+    <a class="lnk" href="#crew">Leadership</a>
+    <a class="lnk" href="careers.html">Careers</a>
+    <a class="lnk" href="#faq">FAQ</a>
+    <a class="quote" href="#quote">Consult FAHHM</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-inner" id="heroInner">
+      <div class="kicker">Design · Consultancy · Construction · Project Management</div>
+      <h1 class="logo" id="logo" aria-label="FAHHM Engineering Services"></h1>
+      <p class="tagline">Empowering visions, delivering results — <b>architecture, engineering design, construction consultancy and construction</b> — turning blueprints into enduring structures.</p>
+      <a class="cta" href="#quote">Consult FAHHM →</a>
+    </div>
+    <div class="scrollcue"><span>Explore</span><span class="line"></span></div>
+  </section>
+
+  <section id="work" class="pad">
+    <div class="sec-head">
+      <div class="eyebrow">Selected Work</div>
+      <h2 class="h2 reveal">Projects we've shaped.</h2>
+      <p class="lede reveal">From residential supervision for the DHA to design supervision for the Army, the Air Force and NUST — a cross-section of what we deliver. Hover a panel to lift the sheet; each drawing inks itself in.</p>
+    </div>
+    <div class="grid" id="work-grid"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="pad about">
+    <div class="wrapx about-grid">
+      <div class="blueprint reveal">
+        <img src="assets/home-blueprints.jpeg" alt="Architectural blueprint of a FAHHM Engineering Services project" loading="lazy"
+             onerror="this.onerror=null;this.src='assets/blueprint.svg'">
+        <div class="bp-title">
+          <div class="nm">FAHH<b>M</b></div>
+          <div class="pr">PROJECT: RESIDENCE 01</div>
+          <div class="meta">
+            <div class="cell"><span>DRAWING</span><b>FES-001</b></div>
+            <div class="cell"><span>SCALE</span><b>1:100</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow">About us</div>
+        <h2 class="h2">Empowering visions, delivering results.</h2>
+        <p>FAHHM Engineering Services (SMC) Private Limited is a design, consultancy and construction firm integrating visionary design, stringent testing protocols, meticulous project management and end-to-end construction. Led by Engr. Junaid Ahmad, we take a project from architectural concept through engineering and testing to a built, delivered structure — under one window.</p>
+        <p>Our vision is to be globally recognised as pioneers in construction consultancy — synonymous with a standard of excellence that incorporates integrity and a comprehensive approach, transforming architectural blueprints into enduring structures of profound significance. Our values: commitment, client satisfaction, honesty, clarity and a task-oriented approach.</p>
+        <div class="stats">
+          <div class="stat"><div class="n">3</div><div class="l">Design · Consult · Build</div></div>
+          <div class="stat"><div class="n">1</div><div class="l">Window solution</div></div>
+          <div class="stat"><div class="n">10<b>+</b></div><div class="l">Service lines</div></div>
+          <div class="stat"><div class="n">100<b>%</b></div><div class="l">In-house delivery</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section id="clients" class="pad clients">
+    <div style="text-align:center;max-width:720px;margin:0 auto 46px">
+      <div class="eyebrow">Trusted by</div>
+      <h2 class="h2 reveal">Institutions that build with us.</h2>
+    </div>
+    <div class="marquee"><div class="ctrack" id="ctrack"></div></div>
+    <div style="text-align:center;margin-top:34px"><a href="clients.html" style="display:inline-flex;align-items:center;gap:7px;color:var(--amber-dk);font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase">View all clients →</a></div>
+  </section>
+  <script>
+  (function(){var C=[["PAF","Pakistan Air Force","paf.png"],["ARMY","Pakistan Army","army.png"],["FWO","Frontier Works Organization","fwo.jpg"],["DHA","DHA Multan","dha-multan.jpg"],["DHA","DHA Peshawar","dha-peshawar.jpeg"],["DHA","DHA Islamabad","dha-islamabad.jpeg"],["AU","Air University","au.png"],["SF","Shaheen Foundation","shaheen.png"],["IDAP","IDAP","idap.png"],["NUST","NUST","nust.png"]];
+  var t=document.getElementById('ctrack');if(!t)return;
+  function card(c){return '<div class="client"><div class="clogo"><img src="assets/clients/'+c[2]+'" alt="'+c[1]+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><span class="cmono">'+c[0]+'</span></div><div class="cname">'+c[1]+'</div></div>';}
+  var one=C.map(card).join('');t.innerHTML=one+one+one;})();
+  </script>
+
+  <!-- WHAT WE BUILD -->
+  <section id="services" class="pad">
+    <div class="wrapx">
+      <div class="lhead reveal">
+        <div class="eyebrow">Our services</div>
+        <h2 class="h2">Design. Consultancy. Construction.</h2>
+        <p class="lede">From first sketch to finished structure — visionary design, stringent testing, meticulous project management and construction, all under one window.</p>
+        <a href="services.html" style="display:inline-flex;align-items:center;gap:7px;margin-top:18px;color:var(--amber-dk);font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase">See all services →</a>
+      </div>
+      <div class="svc-grid">
+        <div class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg></div>
+          <h3>Architecture &amp; Design</h3>
+          <p>Architecture, interior and urban design &amp; town planning — turning a brief into buildable, beautiful space.</p>
+          <a class="lk" href="#quote">Consult FAHHM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 21V8l8-4 8 4v13"/><path d="M9 21v-6h6v6"/><path d="M2 8h20"/></svg></div>
+          <h3>Engineering Design</h3>
+          <p>Structural, MEP (mechanical, electrical &amp; plumbing) and infrastructure design — engineered to code and construction-ready.</p>
+          <a class="lk" href="#quote">Consult FAHHM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18"/><path d="M3 18l4-9 5 3 4-7 5 13"/></svg></div>
+          <h3>Consultancy &amp; Testing</h3>
+          <p>Project management, GIS mapping, topographic survey, environmental studies and stringent material &amp; QA testing.</p>
+          <a class="lk" href="#quote">Consult FAHHM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="svc reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/></svg></div>
+          <h3>Construction</h3>
+          <p>Turning approved designs into built reality — execution and delivery on time, on budget and to spec, under one accountable window.</p>
+          <a class="lk" href="#quote">Consult FAHHM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="pad process">
+    <div class="wrapx">
+      <div class="lhead reveal">
+        <div class="eyebrow">The process</div>
+        <h2 class="h2">Clear from brief to delivery.</h2>
+        <p class="lede">Five stages, each signed off before the next begins — so you always know exactly where the project stands.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><span class="dot"></span><span class="no">01</span><h3>Consult</h3><p>Your brief, site context and an honest read on scope, budget and timeline.</p></div>
+        <div class="step reveal"><span class="dot"></span><span class="no">02</span><h3>Design</h3><p>Architecture, structural and MEP drawings developed and coordinated in-house.</p></div>
+        <div class="step reveal"><span class="dot"></span><span class="no">03</span><h3>Testing</h3><p>Stringent testing and QA protocols that validate every design decision.</p></div>
+        <div class="step reveal"><span class="dot"></span><span class="no">04</span><h3>Documentation</h3><p>code-compliant, tender-ready drawings, approvals and documentation.</p></div>
+        <div class="step reveal"><span class="dot"></span><span class="no">05</span><h3>Build &amp; Handover</h3><p>Construction and project management through to a clean, compliant handover.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREW -->
+  <section id="crew" class="pad crew">
+    <div class="wrapx">
+      <div class="crew-grid">
+        <div class="reveal">
+          <div class="eyebrow">Leadership</div>
+          <h2 class="h2">Led by an engineer, not a salesman.</h2>
+          <p class="crew-quote">"Every structure we create is more than just a building — it's a symbol of trust, quality and innovation. We don't just build structures, we build long-lasting relationships."</p>
+          <div class="sign">Engr. Junaid Ahmad<span>Managing Director · FAHHM Engineering Services</span></div>
+          <div class="badges">
+            <span class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Trusted partners</span>
+            <span class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>High quality standards</span>
+            <span class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>One-window solution</span>
+          </div>
+        </div>
+        <div class="founder reveal">
+          <img src="https://picsum.photos/seed/jbc-founder/900/760?grayscale" alt="Junaid Ahmad, founder of FAHHM Engineering Services, on site." loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET A QUOTE -->
+  <section id="quote" class="pad">
+    <div class="wrapx quote-grid">
+      <div class="reveal">
+        <div class="eyebrow">Consult FAHHM</div>
+        <h2 class="h2">Tell us about your project.</h2>
+        <p class="lede">Share the details and we'll come back with next steps and a consultation time. Design, testing or project management — we cover it under one window.</p>
+        <div class="contact-list">
+          <a href="tel:+923427959023"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2z"/></svg></span>0342-7959023 · 051-7230877</a>
+          <a href="mailto:info@fahmm.co"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>info@fahmm.co</a>
+          <div><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>F-11 Markaz, Islamabad, Pakistan</div>
+        </div>
+      </div>
+      <form class="qform reveal" id="quoteForm" novalidate>
+        <div class="form-ok" id="formOk">Thanks — your enquiry's in. We'll be in touch within two business days.</div>
+        <div class="row2">
+          <div class="field"><label for="name">Full name</label><input id="name" type="text" placeholder="Jane Smith" required></div>
+          <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" placeholder="(00) 0000 0000"></div>
+        </div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="jane@email.com" required></div>
+        <div class="row2">
+          <div class="field"><label for="ptype">Project type</label>
+            <select id="ptype"><option>Architecture / Design</option><option>Structural / MEP</option><option>Infrastructure / Survey</option><option>Project management</option><option>Environmental / testing</option><option>Not sure yet</option></select>
+          </div>
+          <div class="field"><label for="budget">Project stage</label>
+            <select id="budget"><option>Concept</option><option>Design</option><option>Tender</option><option>Construction</option><option>Not sure</option></select>
+          </div>
+        </div>
+        <div class="field"><label for="location">Location / site</label><input id="location" type="text" placeholder="Suburb, region or site"></div>
+        <div class="field"><label for="details">Project details</label><textarea id="details" placeholder="Tell us what you're planning, timeframe, and anything you already have (drawings, site info)…"></textarea></div>
+        <button class="btn-primary" type="submit">Send enquiry <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="form-note">We reply within two business days. Your details stay with us.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="pad">
+    <div class="wrapx" style="max-width:880px">
+      <div class="lhead reveal" style="margin-bottom:34px">
+        <div class="eyebrow">FAQ</div>
+        <h2 class="h2">The questions we get asked.</h2>
+      </div>
+      <div class="faq-list reveal">
+        <details>
+          <summary>Do you handle design and construction both? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Yes — we're a single-window firm covering architecture and engineering design, consultancy and testing, and construction. You get one accountable team from concept through to a finished structure.</div>
+        </details>
+        <details>
+          <summary>What services do you offer? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Architecture, structural, interior, urban / town planning, MEP, infrastructure and GIS design, plus project management, environmental studies, topographic survey, testing and construction — a complete one-window solution from design to delivery.</div>
+        </details>
+        <details>
+          <summary>Why consult FAHHM? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Trusted partners, high quality standards, an empathetic approach, aggressive timelines, systematic planning and a single-window solution — that's what we bring to every engagement.</div>
+        </details>
+        <details>
+          <summary>Where are you located? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Based in F-11 Markaz, Islamabad — we work with clients across Pakistan.</div>
+        </details>
+        <details>
+          <summary>Do you handle testing and approvals? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Yes — stringent testing and QA protocols are built into our process, and we prepare code-compliant, tender-ready documentation and approvals.</div>
+        </details>
+        <details>
+          <summary>How do we get started? <span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="ans">Send your project details via the form or call us — we'll set up a consultation and map out scope, timeline and next steps.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="fbrand">FAHH<b>M</b></div>
+        <p>Design, consultancy and construction — architecture to infrastructure, from blueprint to built structure, under one accountable window.</p>
+        <div class="fsocial"><a href="tel:+923427959023" aria-label="Mobile" title="Mobile · 0342-7959023"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></a><a href="tel:+92517230877" aria-label="Telephone" title="Landline · 051-7230877"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2z"/></svg></a><a href="mailto:info@fahmm.co" aria-label="Email" title="info@fahmm.co"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a><a href="https://www.instagram.com/fahhmes_group/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="https://www.facebook.com/profile.php?id=61550810859381" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg></a></div>
+      </div>
+      <div class="foot-col"><h4>Explore</h4><a href="#work">Projects</a><a href="clients.html">Clients</a><a href="services.html">Services</a><a href="#process">Process</a><a href="#crew">Leadership</a><a href="careers.html">Careers</a><a href="#faq">FAQ</a></div>
+      <div class="foot-col"><h4>Get in touch</h4><a href="tel:+923427959023">0342-7959023</a><a href="tel:+92517230877">051-7230877</a><a href="mailto:info@fahmm.co">info@fahmm.co</a></div>
+      <div class="foot-col"><h4>Office</h4><p>F-11 Markaz,<br>Islamabad, Pakistan</p><a href="https://www.google.com/maps/dir//Fahhm+engineering+service,+MXPQ%2B44R,+F-11+Markaz+F+11+Markaz+F-11,+Islamabad,+Pakistan/@34.0314065,71.5605257,3077m/data=!3m2!1e3!4b1!4m8!4m7!1m0!1m5!1m1!1s0x38dfbd003f5e8b77:0xd3c41f1c50d8975d!2m2!1d72.9877652!2d33.6853651?entry=ttu" target="_blank" rel="noopener">Get directions →</a></div>
+    </div>
+    <div class="foot-map"><iframe src="https://maps.google.com/maps?q=33.6853651,72.9877652&z=15&output=embed" loading="lazy" title="FAHHM Engineering Services — F-11 Markaz, Islamabad"></iframe></div>
+    <div class="foot-bottom"><span>© 2026 FAHHM Engineering Services (SMC) Pvt Ltd.</span><span>Design · Consultancy · Construction</span></div>
+  </footer>
+</div>
+
+<button class="motion-toggle" id="motionToggle">Motion: On</button>
+
+<script>
+const LINE='#d4e6ff',AMBER='#f5a623';
+
+/* ---- wordmark ink-in (letter by letter, accent J) ---- */
+(function(){
+  const word="FAHHM",el=document.getElementById('logo');let i=0;
+  [...word].forEach(ch=>{
+    if(ch===' '){const sp=document.createElement('span');sp.className='sp';el.appendChild(sp);return;}
+    const s=document.createElement('span');s.className='l'+(ch==='M'?' amber':'');s.textContent=ch;
+    s.style.animationDelay=(0.25+i*0.07)+'s';el.appendChild(s);i++;
+  });
+})();
+
+/* ---- the hero emblem: a BIG building going up (frame → walls → glass) ---- */
+function buildEmblem(){
+  const I=LINE,A=AMBER;let s='';
+  const x0=176,x1=372,ground=400,roof=104,floors=6,fh=(ground-roof)/floors;
+  const builtTop=roof+fh*2;          // top two levels are frame-only (under construction)
+  const accFy=roof+fh*3;             // amber-lit floor
+  /* FILLS behind the linework (fade in last) */
+  s+=`<g class="fills">
+    <rect x="${x0}" y="${builtTop.toFixed(1)}" width="${x1-x0}" height="${(ground-builtTop).toFixed(1)}" fill="${I}" opacity=".05"/>
+    <rect x="${x0}" y="${accFy.toFixed(1)}" width="${x1-x0}" height="${fh.toFixed(1)}" fill="${A}" opacity="0" style="opacity:.14"/>
+    <rect x="248" y="${ground-60}" width="52" height="60" fill="${A}" opacity=".16"/>
+  </g>`;
+  /* dimension lines */
+  s+=`<g opacity=".4">
+    <line x1="${x0}" y1="430" x2="${x1}" y2="430" stroke="${I}" stroke-width="1"/>
+    <line x1="${x0}" y1="424" x2="${x0}" y2="436" stroke="${I}" stroke-width="1"/>
+    <line x1="${x1}" y1="424" x2="${x1}" y2="436" stroke="${I}" stroke-width="1"/>
+    <line x1="132" y1="${roof}" x2="132" y2="${ground}" stroke="${I}" stroke-width="1"/>
+    <line x1="126" y1="${roof}" x2="138" y2="${roof}" stroke="${I}" stroke-width="1"/>
+    <line x1="126" y1="${ground}" x2="138" y2="${ground}" stroke="${I}" stroke-width="1"/>
+  </g>`;
+  /* ground */
+  s+=`<line x1="60" y1="400" x2="500" y2="400" stroke="${I}" stroke-width="2.6"/>`;
+  /* tower crane (mast + lattice) */
+  s+=`<line x1="464" y1="400" x2="464" y2="84" stroke="${I}" stroke-width="2.2"/>`;
+  s+=`<line x1="478" y1="400" x2="478" y2="84" stroke="${I}" stroke-width="2.2"/>`;
+  for(let y=110;y<398;y+=26)s+=`<line x1="464" y1="${y}" x2="478" y2="${y-13}" stroke="${I}" stroke-width="1"/><line x1="464" y1="${y-13}" x2="478" y2="${y}" stroke="${I}" stroke-width="1"/>`;
+  /* crane jib (swings) — pivot near mast top (471,84) */
+  let jib='';
+  jib+=`<line x1="471" y1="84" x2="220" y2="84" stroke="${I}" stroke-width="2.2"/>`;
+  jib+=`<line x1="471" y1="84" x2="528" y2="84" stroke="${I}" stroke-width="2.2"/>`;
+  jib+=`<rect x="508" y="76" width="22" height="16" fill="none" stroke="${I}" stroke-width="1.8"/>`;
+  jib+=`<line x1="471" y1="66" x2="280" y2="83" stroke="${I}" stroke-width="1"/>`;
+  jib+=`<line x1="471" y1="84" x2="471" y2="66" stroke="${I}" stroke-width="1"/>`;
+  jib+=`<rect x="459" y="84" width="24" height="16" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  jib+=`<line x1="300" y1="84" x2="300" y2="150" stroke="${I}" stroke-width="1.4"/>`;
+  jib+=`<rect x="288" y="150" width="24" height="14" fill="none" stroke="${I}" stroke-width="1.2"/>`; // panel being hoisted
+  s+=`<g class="jib">${jib}</g>`;
+  /* building outline + parapet */
+  s+=`<rect x="${x0}" y="${roof}" width="${x1-x0}" height="${ground-roof}" fill="none" stroke="${I}" stroke-width="2.8"/>`;
+  s+=`<line x1="${x0-8}" y1="${roof}" x2="${x1+8}" y2="${roof}" stroke="${I}" stroke-width="2.6"/>`;
+  /* full-height studs */
+  for(let k=1;k<5;k++){const x=x0+(x1-x0)*k/5;s+=`<line x1="${x.toFixed(1)}" y1="${roof}" x2="${x.toFixed(1)}" y2="${ground}" stroke="${I}" stroke-width="1.1" opacity=".5"/>`;}
+  /* floor beams */
+  for(let f=1;f<floors;f++){const fy=roof+f*fh;s+=`<line x1="${x0}" y1="${fy.toFixed(1)}" x2="${x1}" y2="${fy.toFixed(1)}" stroke="${I}" stroke-width="1.3" opacity="${f<2?'.55':'.85'}"/>`;}
+  /* diagonal bracing on the unfinished top floors */
+  s+=`<line x1="${x0}" y1="${roof}" x2="${x1}" y2="${builtTop.toFixed(1)}" stroke="${I}" stroke-width="1" opacity=".45"/>`;
+  s+=`<line x1="${x1}" y1="${roof}" x2="${x0}" y2="${builtTop.toFixed(1)}" stroke="${I}" stroke-width="1" opacity=".45"/>`;
+  /* windows on the finished (lower) floors */
+  const cols=4,pad=14,gap=(x1-x0-pad*2)/cols;
+  for(let f=2;f<floors;f++){const fy=roof+f*fh;
+    for(let c=0;c<cols;c++){
+      if(f===floors-1 && (c===1||c===2)) continue;   // leave the doorway clear
+      const ww=gap*0.6,wh=fh*0.5,wx=x0+pad+c*gap+(gap-ww)/2,wy=fy+fh*0.26;
+      s+=`<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="none" stroke="${I}" stroke-width="1.2"/>`;
+    }
+  }
+  /* entrance (dive target) */
+  s+=`<rect x="248" y="${ground-60}" width="52" height="60" fill="none" stroke="${I}" stroke-width="2.2"/>`;
+  s+=`<line x1="274" y1="${ground-60}" x2="274" y2="${ground}" stroke="${I}" stroke-width="1"/>`;
+  /* scaffolding on the left face */
+  s+=`<line x1="${x0-12}" y1="${roof+6}" x2="${x0-12}" y2="${ground}" stroke="${I}" stroke-width="1" opacity=".55"/>`;
+  for(let f=0;f<floors;f++){const fy=roof+f*fh+fh/2;s+=`<line x1="${x0-12}" y1="${fy.toFixed(1)}" x2="${x0}" y2="${fy.toFixed(1)}" stroke="${I}" stroke-width="1" opacity=".45"/>`;}
+  return `<svg viewBox="0 0 560 480" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+
+/* ---- draw-on: ink the structure line by line, fade the fills in last ---- */
+function drawOn(root,dur,spd){
+  dur=dur||3;spd=spd||1;
+  const all=[...root.querySelectorAll('path,line,polyline,polygon,rect,circle,ellipse')];
+  const strokes=all.filter(e=>{const s=e.getAttribute('stroke');return s&&s!=='none';});
+  const fills=all.filter(e=>{const s=e.getAttribute('stroke');const f=e.getAttribute('fill');return (!s||s==='none')&&f&&f!=='none';});
+  const n=strokes.length||1;
+  strokes.forEach(el=>{let len=220;try{len=el.getTotalLength()||220;}catch(e){}
+    el.dataset.len=len;el.style.transition='none';el.style.strokeDasharray=len;el.style.strokeDashoffset=len;});
+  fills.forEach(el=>{el.dataset.op=el.style.opacity||el.getAttribute('opacity')||'1';el.style.transition='none';el.style.opacity='0';});
+  void root.getBoundingClientRect();
+  strokes.forEach((el,i)=>{const d=(i/n)*dur;el.style.transition=`stroke-dashoffset ${spd}s ease ${d.toFixed(2)}s`;el.style.strokeDashoffset='0';});
+  fills.forEach((el,i)=>{const d=dur*0.78+i*0.14;el.style.transition=`opacity .7s ease ${d.toFixed(2)}s`;el.style.opacity=el.dataset.op;});
+}
+
+(function(){
+  const hb=document.getElementById('heroBuild');
+  hb.innerHTML=buildEmblem();
+  drawOn(hb,3.2,0.9);
+  setTimeout(()=>hb.classList.add('craning'),3600);   // crane starts swinging once it's built
+})();
+
+/* ---- the dive: scroll scales you into the structure ---- */
+(function(){
+  const hb=document.getElementById('heroBuild'),hi=document.getElementById('heroInner');let t=false;
+  function upd(){const p=Math.min(1,scrollY/(innerHeight*0.95));
+    hb.style.transform=`translate(-50%,-50%) scale(${(1+p*7).toFixed(3)})`;
+    hb.style.opacity=`${Math.max(0,0.92-p*1.15).toFixed(3)}`;
+    hi.style.transform=`scale(${(1-p*0.22).toFixed(3)})`;hi.style.opacity=`${Math.max(0,1-p*1.5).toFixed(3)}`;t=false;}
+  addEventListener('scroll',()=>{if(!t){requestAnimationFrame(upd);t=true;}},{passive:true});upd();
+})();
+
+/* ---- Selected Work: a distinct line-art per project TYPE ---- */
+const PANEL='#0e2034';
+function svgP(inner){return `<svg viewBox="0 0 400 480" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="${PANEL}"/>${inner}</svg>`;}
+
+/* airfield — runway + fighter jet */
+function gAirfield(){const I=LINE,A=AMBER,cx=200,cy=268;let s='';
+  s+=`<path d="M118,472 L188,118 L212,118 L282,472 Z" fill="none" stroke="${I}" stroke-width="2.2"/>`;
+  for(let i=0;i<7;i++){const t=i/7,y=458-t*330;s+=`<line x1="200" y1="${y.toFixed(1)}" x2="200" y2="${(y-15).toFixed(1)}" stroke="${I}" stroke-width="${Math.max(1,3-t*2).toFixed(1)}" opacity=".7"/>`;}
+  for(let i=0;i<5;i++){const x=150+i*25;s+=`<line x1="${x}" y1="456" x2="${x}" y2="432" stroke="${I}" stroke-width="2" opacity=".55"/>`;}
+  s+=`<path d="M${cx},${cy-72} L${cx+7},${cy-30} L${cx+10},${cy+40} L${cx},${cy+58} L${cx-10},${cy+40} L${cx-7},${cy-30} Z" fill="${PANEL}" stroke="${I}" stroke-width="1.8"/>`;
+  s+=`<path d="M${cx+8},${cy-6} L${cx+74},${cy+40} L${cx+74},${cy+52} L${cx+9},${cy+30} Z" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<path d="M${cx-8},${cy-6} L${cx-74},${cy+40} L${cx-74},${cy+52} L${cx-9},${cy+30} Z" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<path d="M${cx+6},${cy+40} L${cx+24},${cy+64} L${cx+22},${cy+72} L${cx+5},${cy+54} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<path d="M${cx-6},${cy+40} L${cx-24},${cy+64} L${cx-22},${cy+72} L${cx-5},${cy+54} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<path d="M${cx-5},${cy-20} L${cx+5},${cy-20} L${cx+4},${cy-3} L${cx-4},${cy-3} Z" fill="none" stroke="${I}" stroke-width="1"/>`;
+  s+=`<circle cx="${cx}" cy="${cy+60}" r="4.2" fill="${A}"/>`;
+  return svgP(s);}
+
+/* high-rise tower */
+function gTower(){const I=LINE,A=AMBER,x0=132,x1=268,top=70,ground=440,floors=9,fh=(440-70)/9,accF=3;let s='';
+  s+=`<line x1="40" y1="${ground}" x2="360" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<rect x="${x0}" y="${top}" width="${x1-x0}" height="${ground-top}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  s+=`<line x1="${x0-8}" y1="${top}" x2="${x1+8}" y2="${top}" stroke="${I}" stroke-width="2.4"/>`;
+  for(let f=0;f<floors;f++){const fy=top+f*fh;if(f>0)s+=`<line x1="${x0}" y1="${fy.toFixed(1)}" x2="${x1}" y2="${fy.toFixed(1)}" stroke="${I}" stroke-width="1" opacity=".55"/>`;
+    const cols=4,pad=12,gap=(x1-x0-pad*2)/cols,ww=gap*0.6,wh=fh*0.5;
+    for(let c=0;c<cols;c++){const wx=x0+pad+c*gap+(gap-ww)/2,wy=fy+fh*0.25,acc=(f===accF);
+      s+=`<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="${acc?A:'none'}" ${acc?'fill-opacity=".8"':''} stroke="${I}" stroke-width="1.1"/>`;}}
+  s+=`<line x1="200" y1="${top}" x2="200" y2="${top-38}" stroke="${I}" stroke-width="1.4"/>`;        // antenna
+  s+=`<line x1="244" y1="${top}" x2="244" y2="40" stroke="${I}" stroke-width="1.6"/>`;                 // rooftop crane
+  s+=`<line x1="150" y1="46" x2="300" y2="46" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<line x1="182" y1="46" x2="182" y2="80" stroke="${I}" stroke-width="1"/>`;
+  return svgP(s);}
+
+/* family home */
+function gHome(){const I=LINE,A=AMBER,x0=110,x1=290,top=212,ground=430,apex=138;let s='';
+  s+=`<line x1="40" y1="${ground}" x2="360" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<path d="M${x0},${ground} L${x0},${top} L${x1},${top} L${x1},${ground}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  s+=`<path d="M${x0-12},${top+6} L200,${apex} L${x1+12},${top+6}" fill="none" stroke="${I}" stroke-width="2.6" stroke-linejoin="round"/>`;
+  s+=`<rect x="236" y="${apex+16}" width="16" height="36" fill="none" stroke="${I}" stroke-width="1.6"/>`; // chimney
+  s+=`<rect x="182" y="${ground-92}" width="38" height="92" fill="none" stroke="${I}" stroke-width="2"/>`;  // door
+  s+=`<circle cx="212" cy="${ground-46}" r="2" fill="${I}"/>`;
+  s+=`<rect x="128" y="252" width="48" height="48" fill="${A}" fill-opacity=".8" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<rect x="224" y="252" width="48" height="48" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  [[128,252],[224,252]].forEach(w=>{s+=`<line x1="${w[0]+24}" y1="${w[1]}" x2="${w[0]+24}" y2="${w[1]+48}" stroke="${I}" stroke-width="1"/><line x1="${w[0]}" y1="${w[1]+24}" x2="${w[0]+48}" y2="${w[1]+24}" stroke="${I}" stroke-width="1"/>`;});
+  s+=`<line x1="${x0}" y1="312" x2="${x1}" y2="312" stroke="${I}" stroke-width="1" opacity=".5"/>`;
+  return svgP(s);}
+
+/* road + overpass */
+function gRoad(){const I=LINE,A=AMBER;let s='';
+  s+=`<path d="M88,472 L182,120 L218,120 L312,472 Z" fill="none" stroke="${I}" stroke-width="2.2"/>`;
+  for(let i=0;i<8;i++){const t=i/8,y=460-t*330;s+=`<line x1="200" y1="${y.toFixed(1)}" x2="200" y2="${(y-17).toFixed(1)}" stroke="${I}" stroke-width="${Math.max(1,3-t*2).toFixed(1)}" opacity=".75"/>`;}
+  s+=`<rect x="40" y="178" width="320" height="34" fill="${PANEL}" stroke="${I}" stroke-width="2"/>`;       // overpass deck
+  for(let x=70;x<360;x+=40)s+=`<line x1="${x}" y1="178" x2="${x}" y2="212" stroke="${I}" stroke-width="1" opacity=".4"/>`;
+  s+=`<line x1="108" y1="212" x2="108" y2="262" stroke="${I}" stroke-width="2"/>`;
+  s+=`<line x1="292" y1="212" x2="292" y2="272" stroke="${I}" stroke-width="2"/>`;
+  s+=`<rect x="300" y="300" width="28" height="20" fill="${A}" fill-opacity=".85" stroke="${I}" stroke-width="1.4"/>`; // sign
+  s+=`<line x1="314" y1="320" x2="314" y2="352" stroke="${I}" stroke-width="1.4"/>`;
+  return svgP(s);}
+
+/* cable-stay bridge */
+function gBridge(){const I=LINE,A=AMBER,deck=300;let s='';
+  s+=`<line x1="18" y1="${deck}" x2="382" y2="${deck}" stroke="${I}" stroke-width="2.6"/>`;
+  [130,270].forEach(tx=>{s+=`<line x1="${tx}" y1="${deck}" x2="${tx}" y2="120" stroke="${I}" stroke-width="2.4"/>`;
+    s+=`<line x1="${tx-8}" y1="126" x2="${tx+8}" y2="126" stroke="${I}" stroke-width="2"/>`;});
+  for(let i=1;i<=5;i++){const o=i*22;[130,270].forEach(tx=>{s+=`<line x1="${tx}" y1="122" x2="${tx-o}" y2="${deck}" stroke="${I}" stroke-width="1" opacity=".65"/><line x1="${tx}" y1="122" x2="${tx+o}" y2="${deck}" stroke="${I}" stroke-width="1" opacity=".65"/>`;});}
+  s+=`<line x1="18" y1="${deck+92}" x2="382" y2="${deck+92}" stroke="${I}" stroke-width="1" opacity=".35"/>`;
+  s+=`<line x1="130" y1="${deck}" x2="130" y2="${deck+72}" stroke="${I}" stroke-width="2"/>`;
+  s+=`<line x1="270" y1="${deck}" x2="270" y2="${deck+72}" stroke="${I}" stroke-width="2"/>`;
+  s+=`<circle cx="130" cy="118" r="3.4" fill="${A}"/>`;
+  return svgP(s);}
+
+/* aircraft hangar */
+function gHangar(){const I=LINE,A=AMBER,x0=66,x1=334,ground=434,top=212;let s='';
+  s+=`<line x1="30" y1="${ground}" x2="370" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<path d="M${x0},${ground} L${x0},${top} Q200,${top-112} ${x1},${top} L${x1},${ground}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  for(let i=1;i<=3;i++){const o=i*22;s+=`<path d="M${x0+o},${top+6} Q200,${top-92+o*0.6} ${x1-o},${top+6}" fill="none" stroke="${I}" stroke-width="1" opacity=".45"/>`;}
+  const d0=118,d1=282;s+=`<rect x="${d0}" y="${ground-152}" width="${d1-d0}" height="152" fill="none" stroke="${I}" stroke-width="2"/>`;
+  for(let x=d0+20;x<d1;x+=20)s+=`<line x1="${x}" y1="${ground-152}" x2="${x}" y2="${ground}" stroke="${I}" stroke-width="1" opacity=".55"/>`;
+  s+=`<path d="M188,${ground-152} L210,${ground-206} L232,${ground-152} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`; // jet tail peeking
+  s+=`<circle cx="${x1-16}" cy="${top+30}" r="3.2" fill="${A}"/>`;
+  return svgP(s);}
+
+const GENP={airfield:gAirfield,tower:gTower,home:gHome,road:gRoad,bridge:gBridge,hangar:gHangar};
+
+(function(){
+  const projects=[
+    {t:"Aviation Base",s:"Infrastructure · airfield",loc:"Defence",kind:"airfield"},
+    {t:"Commercial Tower",s:"Structural & MEP design",loc:"Islamabad",kind:"tower"},
+    {t:"Private Residence",s:"Architecture & interiors",loc:"E-11, Islamabad",kind:"home"},
+    {t:"Highway & Overpass",s:"Infrastructure design",loc:"KP Corridor",kind:"road"},
+    {t:"River Crossing",s:"Structural design",loc:"Islamabad",kind:"bridge"},
+    {t:"Industrial Hangar",s:"Structural & MEP",loc:"Islamabad",kind:"hangar"},
+  ];
+  const g=document.getElementById('work-grid');
+  /* no hover on touch / small screens → open + draw each card as it scrolls into view */
+  const noHover=matchMedia('(hover:none), (max-width:768px)').matches;
+  const mio=noHover?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
+    e.target.classList.add('open');e.target._reveal&&e.target._reveal();mio.unobserve(e.target);}}),{threshold:.4}):null;
+  projects.forEach(p=>{const c=document.createElement('article');c.className='card reveal';
+    c.innerHTML=`<div class="art">${(GENP[p.kind]||gTower)()}</div>
+      <div class="lid l"></div><div class="lid r"></div><div class="seam"></div>
+      <div class="meta"><div class="t">${p.t}</div><div class="s">${p.s} · ${p.loc}</div><div class="go">View project →</div></div>`;
+    const reveal=()=>{if(c.dataset.drawn)return;c.dataset.drawn=1;setTimeout(()=>drawOn(c.querySelector('.art'),1.6,0.7),240);};
+    c._reveal=reveal;
+    c.addEventListener('mouseenter',reveal);
+    c.addEventListener('click',()=>{location.href='project.html?p='+p.kind;});  // → project detail page
+    g.appendChild(c);
+    if(mio)mio.observe(c);});
+})();
+
+/* scroll reveal */
+(function(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));})();
+
+/* FAQ single-open accordion */
+document.querySelectorAll('#faq details').forEach(d=>d.addEventListener('toggle',()=>{
+  if(d.open)document.querySelectorAll('#faq details').forEach(o=>{if(o!==d)o.open=false;});}));
+
+/* quote form */
+(function(){const f=document.getElementById('quoteForm');if(!f)return;
+  f.addEventListener('submit',e=>{e.preventDefault();document.getElementById('formOk').classList.add('show');
+    f.querySelector('.btn-primary').firstChild.textContent='Sent ✓ ';});})();
+
+/* ---- generative blueprint-line background ---- */
+(function(){
+  const cv=document.getElementById('grid'),ctx=cv.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let running=!reduce,W,H,DPR,DENS=52;
+  const mouse={x:-9999,y:-9999,px:-9999,py:-9999,v:0};
+  const BG='10,23,38',COL='212,230,255';
+  function resize(){DPR=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR;
+    cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';ctx.fillStyle='rgb('+BG+')';ctx.fillRect(0,0,W,H);
+    DENS=innerWidth<760?24:52;}
+  const gx=[];for(let i=0;i<512;i++)gx[i]=Math.random()*6.2832;
+  function field(x,y,t){const xi=Math.floor(x*0.0015),yi=Math.floor(y*0.0015);
+    const g=gx[(((xi*57+yi*131+Math.floor(t))%511)+511)%511];
+    return g+Math.sin(x*0.0018+t*0.25)*0.7+Math.cos(y*0.002-t*0.2)*0.7;}
+  class Ln{constructor(x,y,a,l,w){this.reset(x,y,a,l,w);}
+    reset(x,y,a,l,w){this.x=x??Math.random()*W;this.y=y??Math.random()*H;this.a=a??Math.random()*6.28;
+      this.life=this.max=l??(70+Math.random()*150);this.w=w??(0.4+Math.random()*1.4);this.dead=false;}
+    step(t){let a=field(this.x,this.y,t);
+      const dx=this.x-mouse.x*DPR,dy=this.y-mouse.y*DPR,dist=Math.hypot(dx,dy);let near=0;
+      if(dist<220*DPR){const pull=Math.atan2(dy,dx),f=1-dist/(220*DPR);a=a*(1-f*0.6)+pull*f*0.6;near=f;}
+      const px=this.x,py=this.y,sp=2.0+mouse.v*0.04;this.x+=Math.cos(a)*sp;this.y+=Math.sin(a)*sp;this.a=a;
+      const k=this.life/this.max,wid=this.w*Math.sin(k*Math.PI),al=0.10+near*0.4;
+      ctx.strokeStyle=near>0.45?`rgba(245,166,35,${al})`:`rgba(${COL},${al})`;
+      ctx.lineWidth=Math.max(0.3,wid*DPR);ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(this.x,this.y);ctx.stroke();this.life--;
+      if(this.life<=0||this.x<-30||this.x>W+30||this.y<-30||this.y>H+30)this.dead=true;
+      if(Math.random()<0.01&&agents.length<DENS*2.2)agents.push(new Ln(this.x,this.y,this.a+(Math.random()-.5)*1.3,this.life*0.6,this.w*0.7));}}
+  let agents=[];
+  function loop(ts){const t=ts*0.001;mouse.v+=(Math.hypot(mouse.x-mouse.px,mouse.y-mouse.py)-mouse.v)*0.2;
+    mouse.px=mouse.x;mouse.py=mouse.y;ctx.fillStyle='rgba('+BG+',0.05)';ctx.fillRect(0,0,W,H);
+    while(agents.length<DENS)agents.push(new Ln());
+    for(let i=agents.length-1;i>=0;i--){agents[i].step(t);if(agents[i].dead)agents.splice(i,1);}
+    if(mouse.x>0){ctx.strokeStyle='rgba(245,166,35,'+Math.min(.5,mouse.v*0.03)+')';ctx.lineWidth=DPR;
+      ctx.beginPath();ctx.arc(mouse.x*DPR,mouse.y*DPR,16*DPR+mouse.v,0,6.2832);ctx.stroke();}
+    if(running)requestAnimationFrame(loop);}
+  addEventListener('resize',resize);resize();
+  if(running)requestAnimationFrame(loop);
+  else for(let i=0;i<240;i++){agents.length<DENS&&agents.push(new Ln());agents.forEach(a=>a.step(i*0.05));agents=agents.filter(a=>!a.dead);}
+  const cross=document.getElementById('cross');
+  addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;
+    cross.style.transform=`translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;});
+  const mt=document.getElementById('motionToggle');
+  mt.addEventListener('click',()=>{running=!running;mt.textContent='Motion: '+(running?'On':'Off');if(running)requestAnimationFrame(loop);});
+})();
+</script>
+</body>
+</html>

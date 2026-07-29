@@ -1,0 +1,5 @@
+.DS_Store
+assets/*.jpg
+assets/*.jpeg
+assets/*.png
+!assets/home-blueprints.jpeg
