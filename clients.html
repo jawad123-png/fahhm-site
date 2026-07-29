@@ -11,6 +11,8 @@
 <style>
   :root{--bg:#0a1726;--panel:#0e2034;--line:#d4e6ff;--soft:#8aa0bd;--amber:#f5a623;--amber-dk:#ffb949}
   *{margin:0;padding:0;box-sizing:border-box}
+  html{overflow-x:hidden}
+  img,svg,iframe,video{max-width:100%}
   ::selection{background:rgba(245,166,35,.3);color:#fff}
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--line);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;
@@ -36,7 +38,7 @@
   .eyebrow{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.44em;text-transform:uppercase;color:var(--amber);margin-bottom:20px;
     display:inline-flex;align-items:center;gap:12px}
   .eyebrow::before,.eyebrow::after{content:"";width:30px;height:1px;background:rgba(245,166,35,.6)}
-  .chero h1{font-family:'Anton',sans-serif;font-size:clamp(54px,11vw,142px);line-height:.88;letter-spacing:1px;text-transform:uppercase}
+  .chero h1{font-family:'Anton',sans-serif;font-size:clamp(38px,10vw,142px);line-height:.9;letter-spacing:1px;text-transform:uppercase;overflow-wrap:break-word}
   .chero h1 span{background:linear-gradient(180deg,#ffe6b0,#c89226);-webkit-background-clip:text;background-clip:text;color:transparent}
   .chero p{max-width:640px;margin:26px auto 0;color:var(--soft);font-weight:300;line-height:1.75;font-size:clamp(15px,1.8vw,19px)}
   .chero p b{color:var(--line);font-weight:500;border-bottom:1px solid var(--amber);padding-bottom:2px}

@@ -18,6 +18,8 @@
     --amber-dk:#ffb949;
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  html{overflow-x:hidden}
+  img,svg,iframe,video{max-width:100%}
   ::selection{background:rgba(245,166,35,.3);color:#fff}
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--line);font-family:'Inter',system-ui,sans-serif;
@@ -44,6 +46,7 @@
   #heroBuild{position:fixed;top:47%;left:50%;height:min(90vh,880px);width:auto;aspect-ratio:560/480;
     transform:translate(-50%,-50%);transform-origin:50% 78%;  /* dive zooms toward the doorway */
     z-index:1;pointer-events:none;will-change:transform,opacity;opacity:.95}
+  @media(max-width:760px){#heroBuild{height:auto;width:94vw}}
   #heroBuild svg{width:100%;height:100%;display:block;overflow:visible}
   .jib{transform-box:view-box;transform-origin:471px 140px;will-change:transform}
   @keyframes swing{0%,100%{transform:rotate(-3.2deg)}50%{transform:rotate(3.2deg)}}
