@@ -190,7 +190,7 @@ const DATA={
     facts:{Scope:"Structural · MEP",Discipline:"Engineering design",Status:"Case study",Year:"—"}},
   home:{t:"DHA Quetta",s:"Infrastructure",loc:"Quetta, Balochistan",dwg:"FES-H01",
     blurb:"Infrastructure works for DHA Quetta — roads and pavements, earthworks, steel reinforcement and on-site supervision, delivered to standard across the development.",
-    facts:{Scope:"Infrastructure",Discipline:"Civil · Roads",Status:"In progress",Year:"—"},
+    facts:{Scope:"Infrastructure",Discipline:"Civil · Roads",Status:"In progress",Year:"—"},art:"road",
     imgs:["quetta-1.jpg","quetta-2.jpg","quetta-3.jpg","quetta-4.jpg","quetta-5.jpg","quetta-6.jpg","quetta-7.jpg"]},
   road:{t:"Highway & Overpass",s:"Infrastructure design",loc:"KP Corridor",dwg:"FES-R04",
     blurb:"Infrastructure design for a highway corridor and overpass — geometry, pavement, drainage and structures with topographic survey and GIS mapping.",
@@ -205,7 +205,7 @@ const DATA={
 
 const kind=(new URLSearchParams(location.search).get('p')||'airfield');
 const d=DATA[kind]||DATA.airfield;
-document.getElementById('art').insertAdjacentHTML('afterbegin',(GENP[kind]||gAirfield)());
+document.getElementById('art').insertAdjacentHTML('afterbegin',(GENP[d.art||kind]||gAirfield)());
 document.title=d.t+" — FAHHM Engineering Services";
 document.getElementById('eyebrow').textContent=d.s.split(' · ')[0];
 document.getElementById('title').textContent=d.t;
