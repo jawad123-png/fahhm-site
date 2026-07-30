@@ -82,7 +82,7 @@
   .logo .l{display:inline-block;opacity:0;transform:translateY(.16em);filter:blur(7px);
     animation:ink-in .85s cubic-bezier(.2,.8,.2,1) forwards}
   .logo .sp{display:inline-block;width:.28em}
-  .logo .amber{color:#3a78e0;text-shadow:0 0 34px rgba(58,120,224,.45)}
+  .logo .amber{color:#38bdf8;text-shadow:0 0 34px rgba(56,189,248,.5)}
   @keyframes ink-in{to{opacity:1;transform:none;filter:blur(0)}}
   .tagline{margin-top:26px;max-width:540px;font-size:clamp(14px,1.6vw,18px);font-weight:400;line-height:1.7;
     color:#c2d2e8;opacity:0;animation:rise 1.2s 1.95s both;text-shadow:0 1px 14px rgba(10,23,38,.95)}
@@ -659,8 +659,9 @@ function drawOn(root,dur,spd){
 (function(){
   const hb=document.getElementById('heroBuild');
   hb.innerHTML=buildEmblem();
-  drawOn(hb,3.2,0.9);
-  setTimeout(()=>hb.classList.add('craning'),3600);   // crane starts swinging once it's built
+  const _m=innerWidth<760;                              // faster inking on mobile
+  drawOn(hb,_m?1.6:3.2,_m?0.55:0.9);
+  setTimeout(()=>hb.classList.add('craning'),_m?2000:3600);   // crane starts swinging once it's built
 })();
 
 /* ---- the dive: scroll scales you into the structure ---- */
