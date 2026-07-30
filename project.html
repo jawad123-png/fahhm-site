@@ -60,6 +60,9 @@
   .ph svg{width:30px;height:30px;opacity:.6}
   .ph span{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
   .ph .no{font-size:11px;opacity:.6;letter-spacing:.2em}
+  .pic{aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1px solid rgba(212,230,255,.14);background:#0e2034;display:block}
+  .pic img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+  .pic:hover img{transform:scale(1.05)}
 
   footer{border-top:1px solid rgba(212,230,255,.1);padding:30px 0;color:var(--soft);font-size:13px}
   .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
@@ -94,7 +97,7 @@
   <section class="gallery-sec">
     <div class="gh">
       <h2>Project gallery</h2>
-      <p>Photos coming soon — on-site progress and the finished build.</p>
+      <p id="gsub">Photos coming soon — on-site progress and the finished build.</p>
     </div>
     <div class="grid" id="gallery"></div>
   </section>
@@ -185,9 +188,10 @@ const DATA={
   tower:{t:"Commercial Tower",s:"Structural & MEP design",loc:"Islamabad",dwg:"FES-T12",
     blurb:"Structural and MEP design for a commercial high-rise — a coordinated, code-compliant package from concept through tender-ready documentation.",
     facts:{Scope:"Structural · MEP",Discipline:"Engineering design",Status:"Case study",Year:"—"}},
-  home:{t:"Private Residence",s:"Infrastructure",loc:"DHA Quetta",dwg:"FES-H01",
-    blurb:"Residence infrastructure at DHA Quetta — engineering, supervision and delivery to standard, from site services through to finish.",
-    facts:{Scope:"Infrastructure",Discipline:"Civil",Status:"In progress",Year:"—"}},
+  home:{t:"DHA Quetta",s:"Infrastructure",loc:"Quetta, Balochistan",dwg:"FES-H01",
+    blurb:"Infrastructure works for DHA Quetta — roads and pavements, earthworks, steel reinforcement and on-site supervision, delivered to standard across the development.",
+    facts:{Scope:"Infrastructure",Discipline:"Civil · Roads",Status:"In progress",Year:"—"},
+    imgs:["quetta-1.jpg","quetta-2.jpg","quetta-3.jpg","quetta-4.jpg","quetta-5.jpg","quetta-6.jpg","quetta-7.jpg"]},
   road:{t:"Highway & Overpass",s:"Infrastructure design",loc:"KP Corridor",dwg:"FES-R04",
     blurb:"Infrastructure design for a highway corridor and overpass — geometry, pavement, drainage and structures with topographic survey and GIS mapping.",
     facts:{Scope:"Roads · Structures",Discipline:"Civil · GIS",Status:"Case study",Year:"—"}},
@@ -212,8 +216,13 @@ document.getElementById('facts').innerHTML=Object.entries(d.facts).map(([k,v])=>
 
 /* photo slots — replace with <img> once photos arrive (assets/${kind}-N.jpg) */
 const cam=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-2h8l2 2h3v12H3z"/><circle cx="12" cy="13" r="4"/></svg>`;
-document.getElementById('gallery').innerHTML=Array.from({length:6},(_,i)=>
-  `<div class="ph">${cam}<span>Photo ${String(i+1).padStart(2,'0')}</span><span class="no">COMING SOON</span></div>`).join('');
+const g=document.getElementById('gallery');
+if(d.imgs && d.imgs.length){
+  document.getElementById('gsub').textContent='On-site progress from '+d.t+'.';
+  g.innerHTML=d.imgs.map((src,i)=>`<a class="pic" href="assets/projects/${src}" target="_blank" rel="noopener"><img src="assets/projects/${src}" alt="${d.t} — photo ${i+1}" loading="lazy"></a>`).join('');
+}else{
+  g.innerHTML=Array.from({length:6},(_,i)=>`<div class="ph">${cam}<span>Photo ${String(i+1).padStart(2,'0')}</span><span class="no">COMING SOON</span></div>`).join('');
+}
 </script>
 </body>
 </html>
