@@ -179,15 +179,43 @@ function gHangar(){const I=LINE,A=AMBER,x0=66,x1=334,ground=434,top=212;let s=''
   s+=`<path d="M188,${ground-152} L210,${ground-206} L232,${ground-152} Z" fill="none" stroke="${I}" stroke-width="1.4"/>`;
   s+=`<circle cx="${x1-16}" cy="${top+30}" r="3.2" fill="${A}"/>`;
   return svgP(s);}
-const GENP={airfield:gAirfield,tower:gTower,home:gHome,road:gRoad,bridge:gBridge,hangar:gHangar};
+/* modern co-working / office building */
+function gCowork(){const I=LINE,A=AMBER;let s='';
+  const x0=70,x1=330,ground=430,top=150,floors=3,fh=(430-150)/3;
+  s+=`<line x1="30" y1="${ground}" x2="370" y2="${ground}" stroke="${I}" stroke-width="2.4"/>`;
+  s+=`<rect x="${x0}" y="${top}" width="${x1-x0}" height="${ground-top}" fill="none" stroke="${I}" stroke-width="2.6"/>`;
+  s+=`<line x1="${x0-8}" y1="${top}" x2="${x1+8}" y2="${top}" stroke="${I}" stroke-width="2.4"/>`;
+  for(let x=x0+16;x<x1;x+=26)s+=`<line x1="${x}" y1="${top}" x2="${x}" y2="${top-14}" stroke="${I}" stroke-width="1" opacity=".65"/>`;
+  s+=`<line x1="${x0}" y1="${top-14}" x2="${x1}" y2="${top-14}" stroke="${I}" stroke-width="1" opacity=".65"/>`;
+  s+=`<rect x="${x0+18}" y="${top-30}" width="18" height="16" fill="none" stroke="${I}" stroke-width="1.2"/>`;
+  s+=`<path d="M${x0+27},${top-30} q0,-11 -6,-15 M${x0+27},${top-30} q0,-9 6,-13" fill="none" stroke="${I}" stroke-width="1"/>`;
+  for(let f=1;f<floors;f++){const fy=top+f*fh;s+=`<line x1="${x0}" y1="${fy.toFixed(1)}" x2="${x1}" y2="${fy.toFixed(1)}" stroke="${I}" stroke-width="1.4" opacity=".8"/>`;}
+  const cols=6,pad=14,gap=(x1-x0-pad*2)/cols,accF=1,accC=1;
+  for(let f=0;f<floors;f++){const fy=top+f*fh;
+    for(let c=0;c<cols;c++){
+      if(f===floors-1 && (c===2||c===3)) continue;
+      const wx=x0+pad+c*gap,wy=fy+8,ww=gap-6,wh=fh-16,acc=(f===accF&&c===accC);
+      s+=`<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="${ww.toFixed(1)}" height="${wh.toFixed(1)}" fill="${acc?A:'none'}" ${acc?'fill-opacity=".85"':''} stroke="${I}" stroke-width="1.1"/>`;
+      s+=`<line x1="${wx.toFixed(1)}" y1="${(wy+wh*0.5).toFixed(1)}" x2="${(wx+ww).toFixed(1)}" y2="${(wy+wh*0.5).toFixed(1)}" stroke="${I}" stroke-width=".6" opacity=".55"/>`;
+    }
+  }
+  const ex0=x0+pad+2*gap,ex1=x0+pad+4*gap,ey=top+(floors-1)*fh+8;
+  s+=`<rect x="${ex0.toFixed(1)}" y="${ey.toFixed(1)}" width="${(ex1-ex0).toFixed(1)}" height="${(ground-ey-2).toFixed(1)}" fill="none" stroke="${I}" stroke-width="1.6"/>`;
+  s+=`<line x1="${((ex0+ex1)/2).toFixed(1)}" y1="${ey.toFixed(1)}" x2="${((ex0+ex1)/2).toFixed(1)}" y2="${ground-2}" stroke="${I}" stroke-width="1.2"/>`;
+  s+=`<rect x="${(ex0-8).toFixed(1)}" y="${(ey-4).toFixed(1)}" width="${(ex1-ex0+16).toFixed(1)}" height="6" fill="${A}" fill-opacity=".85" stroke="none"/>`;
+  s+=`<line x1="350" y1="${ground}" x2="350" y2="${ground-38}" stroke="${I}" stroke-width="1.6"/><circle cx="350" cy="${ground-50}" r="15" fill="none" stroke="${I}" stroke-width="1.4"/>`;
+  s+=`<line x1="50" y1="${ground}" x2="50" y2="${ground-32}" stroke="${I}" stroke-width="1.4"/><circle cx="50" cy="${ground-42}" r="12" fill="none" stroke="${I}" stroke-width="1.2"/>`;
+  return svgP(s);
+}
+const GENP={airfield:gAirfield,tower:gTower,home:gHome,road:gRoad,bridge:gBridge,hangar:gHangar,cowork:gCowork};
 
 const DATA={
   airfield:{t:"Aviation Base",s:"Infrastructure · airfield",loc:"Defence",dwg:"FES-A07",
     blurb:"Consultancy for a military aviation base — runway, taxiway and apron design with drainage, lighting and MEP coordination, engineered to load spec and delivered with full documentation.",
     facts:{Scope:"Infrastructure design",Discipline:"Civil · MEP",Status:"Case study",Year:"—"}},
-  tower:{t:"Commercial Tower",s:"Structural & MEP design",loc:"Islamabad",dwg:"FES-T12",
-    blurb:"Structural and MEP design for a commercial high-rise — a coordinated, code-compliant package from concept through tender-ready documentation.",
-    facts:{Scope:"Structural · MEP",Discipline:"Engineering design",Status:"Case study",Year:"—"}},
+  tower:{t:"Co-working Space",s:"Architecture & interiors",loc:"Islamabad",dwg:"FES-T12",art:"cowork",
+    blurb:"A modern co-working space — architecture, interiors and MEP for flexible open-plan floors, meeting pods and shared amenities.",
+    facts:{Scope:"Architecture · Interior · MEP",Discipline:"Design",Status:"Case study",Year:"—"}},
   home:{t:"DHA Quetta",s:"Infrastructure",loc:"Quetta, Balochistan",dwg:"FES-H01",
     blurb:"Infrastructure works for DHA Quetta — roads and pavements, earthworks, steel reinforcement and on-site supervision, delivered to standard across the development.",
     facts:{Scope:"Infrastructure",Discipline:"Civil · Roads",Status:"In progress",Year:"—"},art:"road",
