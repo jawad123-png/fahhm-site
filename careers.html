@@ -154,18 +154,20 @@
       <div class="eyebrow">Apply</div>
       <h2 class="h2" style="margin-bottom:10px">Send your application.</h2>
       <p style="color:var(--soft);font-weight:300;line-height:1.7;max-width:60ch;margin-bottom:28px">Fill in your details and share a link to your CV or portfolio. We review every application and reply to shortlisted candidates. No open role that fits? Send a general application and we'll keep you on file.</p>
-      <form id="appForm" novalidate>
+      <form id="appForm" name="application" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="application">
+        <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
         <div class="ok" id="ok">Thank you — your application's in. If it's a match, we'll be in touch.</div>
         <div class="grid">
-          <div class="field"><label for="name">Full name</label><input id="name" type="text" placeholder="Your name" required></div>
-          <div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="you@email.com" required></div>
-          <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" placeholder="03xx-xxxxxxx"></div>
-          <div class="field"><label for="position">Position</label><select id="position"></select></div>
+          <div class="field"><label for="name">Full name</label><input id="name" name="name" type="text" placeholder="Your name" required></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@email.com" required></div>
+          <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="03xx-xxxxxxx"></div>
+          <div class="field"><label for="position">Position</label><select id="position" name="position"></select></div>
           <div class="field"><label for="exp">Experience</label>
-            <select id="exp"><option>Student / Intern</option><option>0–2 years</option><option>2–5 years</option><option>5–10 years</option><option>10+ years</option></select>
+            <select id="exp" name="experience"><option>Student / Intern</option><option>0–2 years</option><option>2–5 years</option><option>5–10 years</option><option>10+ years</option></select>
           </div>
-          <div class="field"><label for="link">CV / Portfolio / LinkedIn link</label><input id="link" type="url" placeholder="https://…"></div>
-          <div class="field full"><label for="msg">Cover note</label><textarea id="msg" placeholder="Tell us briefly why you'd be a great fit…"></textarea></div>
+          <div class="field"><label for="link">CV / Portfolio / LinkedIn link</label><input id="link" name="cv-link" type="url" placeholder="https://…"></div>
+          <div class="field full"><label for="msg">Cover note</label><textarea id="msg" name="cover-note" placeholder="Tell us briefly why you'd be a great fit…"></textarea></div>
         </div>
         <button class="submit" type="submit">Send application <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         <p class="note">Prefer email? Send your CV to <a href="mailto:info@fahhm.co" style="color:var(--amber-dk)">info@fahhm.co</a>. Your details stay with us.</p>
@@ -228,8 +230,12 @@ document.querySelectorAll('.applyx').forEach(b=>b.addEventListener('click',()=>{
 
 document.getElementById('appForm').addEventListener('submit',e=>{
   e.preventDefault();
-  document.getElementById('ok').classList.add('show');
-  e.target.querySelector('.submit').firstChild.textContent='Sent ✓ ';
+  const f=e.target;if(!f.reportValidity())return;
+  const btn=f.querySelector('.submit');btn.firstChild.textContent='Sending… ';
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams(new FormData(f)).toString()})
+    .then(()=>{document.getElementById('ok').classList.add('show');btn.firstChild.textContent='Sent ✓ ';f.reset();})
+    .catch(()=>{btn.firstChild.textContent='Send application ';alert('Something went wrong. Please email info@fahhm.co directly.');});
 });
 </script>
 </body>
